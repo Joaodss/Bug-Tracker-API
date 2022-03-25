@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BugTracker.Models;
 
+[Table("Roles")]
 public class Role
 {
     [Key, Column("id")]

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BugTracker.Models;
 
+[Table("Users")]
 public class User
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

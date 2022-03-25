@@ -4,6 +4,7 @@ using FastEnumUtility;
 
 namespace BugTracker.Models;
 
+[Table("Tickets")]
 public class Ticket
 {
     [Key, Column("id")]
