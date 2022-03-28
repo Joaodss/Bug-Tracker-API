@@ -56,10 +56,7 @@ public class TicketCommentService : ITicketCommentService
     public void Update(int ticketId, int commentId, TicketComment ticketComment)
     {
         var comment = GetById(ticketId, commentId);
-        if (comment is null)
-        {
-            return;
-        }
+        if (comment is null) return;
 
         comment.content = ticketComment.content;
         _context.SaveChanges();
@@ -68,10 +65,7 @@ public class TicketCommentService : ITicketCommentService
     public void Delete(int ticketId, int commentId)
     {
         var comment = GetById(ticketId, commentId);
-        if (comment is null)
-        {
-            return;
-        }
+        if (comment is null) return;
 
         _context.Comments.Remove(comment);
         _context.SaveChanges();
@@ -80,10 +74,7 @@ public class TicketCommentService : ITicketCommentService
     public void Delete(int commentId)
     {
         var comment = GetById(commentId);
-        if (comment is null)
-        {
-            return;
-        }
+        if (comment is null) return;
 
         _context.Comments.Remove(comment);
         _context.SaveChanges();

@@ -6,22 +6,21 @@ namespace BugTracker.Models;
 [Table("Projects")]
 public class Project
 {
-    [Key, Column("id")]
+    [Key] [Column("id")]
     public long Id { get; set; }
 
-    [Required, Column("created_at", TypeName = "datetime2")]
-    public DateTime CreatedAt { get; } = DateTime.Now;
+    [Required] [Column("created_at")]
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Required, Column("title")]
+    [Required] [Column("title")]
     public string Title { get; set; }
 
-    [Required, Column("description")]
-    public string Description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
-    // -------------------- Model Relations --------------------
     // Many to One
-    [Required, ForeignKey("company_id")]
-    public string CompanyId { get; set; }
+    [Required] [ForeignKey("company_id")]
+    public long CompanyId { get; set; }
 
     public virtual Company Company { get; set; }
 

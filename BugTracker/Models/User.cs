@@ -1,56 +1,53 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace BugTracker.Models;
 
-[Table("Users")]
 public class User
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+    [Key] [DatabaseGenerated(DatabaseGeneratedOption.Identity)] [Column("id")]
     public Guid Id { get; set; }
 
-    [Required, Column("created_at")]
-    public DateTime CreatedAt { get; } = DateTime.Now;
+    [Required] [Column("created_at")]
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Required, Column("email")]
+    [Required] [Column("email")]
     public string Email { get; set; }
 
-    [Required, Column("password")]
+    [Required] [Column("password")]
     public string Password { get; set; }
 
-    [Required, Column("name")]
+    [Required] [Column("name")]
     public string Name { get; set; }
 
-    [Required, Column("photo_url")]
-    public string PhotoURL { get; set; }
+    [Column("photo_url")]
+    public string? PhotoUrl { get; set; }
 
-    // -------------------- Model Relations --------------------
-    // Many to One
-    [Required, ForeignKey("role_id")]
+    // Many to One: Roles - User
+    [Required] [ForeignKey("role_id")]
     public int RoleId { get; set; }
 
     public Role Role { get; set; }
 
-    // Many to Many
+    // Many to Many: Users - Owned - Companies
     public virtual ICollection<Company> OwnedCompanies { get; set; }
 
-    // Many to Many
+    // Many to Many: Users - Assigned - Companies
     public virtual ICollection<Company> AssignedCompanies { get; set; }
 
-    // Many to Many
+    // Many to Many: Users - Owned - Projects
     public virtual ICollection<Project> OwnedProjects { get; set; }
 
-    // Many to Many
+    // Many to Many: Users - Assigned - Projects
     public virtual ICollection<Project> AssignedProjects { get; set; }
 
-    // Many to Many
+    // Many to Many: Users - Owned - Tickets
     public virtual ICollection<Ticket> OwnedTickets { get; set; }
 
-    // Many to Many
+    // Many to Many: Users - Assigned - Tickets
     public virtual ICollection<Ticket> AssignedTickets { get; set; }
 
-    // One to Many
+    // One to Many: User - Comments
     [InverseProperty("User")]
     public virtual ICollection<TicketComment> TicketComments { get; set; }
 }

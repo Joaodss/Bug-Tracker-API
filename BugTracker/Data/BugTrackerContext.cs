@@ -16,49 +16,111 @@ public class BugTrackerContext : DbContext
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketComment> Comments { get; set; }
 
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     const string connectionString = @"Database=BugTracker;UserID=BugTracker-admin;Password=BugTracker-123;";
-    //     optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-    //         .LogTo(Console.WriteLine, LogLevel.Information)
-    //         .EnableSensitiveDataLogging()
-    //         .EnableDetailedErrors();
-    // }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-
         modelBuilder.HasDefaultSchema("BugTracker");
 
-        modelBuilder.Entity<Company>()
-            .HasMany(company => company.Admins)
-            .WithMany(user => user.OwnedCompanies)
-            .UsingEntity(entity => entity.ToTable("OwnedUserCompanies"));
+        // Users - Owned - Companies
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.OwnedCompanies)
+            .WithMany(company => company.Admins)
+            .UsingEntity<Dictionary<string, object>>(
+                "OwnedUsersCompanies",
+                entity => entity
+                    .HasOne<Company>()
+                    .WithMany()
+                    .HasForeignKey("CompanyId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                entity => entity
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade));
 
-        modelBuilder.Entity<Company>()
-            .HasMany(company => company.Users)
-            .WithMany(user => user.AssignedCompanies)
-            .UsingEntity(entity => entity.ToTable("AssignedUserCompanies"));
 
-        modelBuilder.Entity<Project>()
-            .HasMany(project => project.ProjectOwners)
-            .WithMany(user => user.OwnedProjects)
-            .UsingEntity(entity => entity.ToTable("OwnedUserProjects"));
+        // Users - Assigned - Companies
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.AssignedCompanies)
+            .WithMany(company => company.Users)
+            .UsingEntity<Dictionary<string, object>>(
+                "AssignedUsersCompanies",
+                entity => entity
+                    .HasOne<Company>()
+                    .WithMany()
+                    .HasForeignKey("CompanyId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                entity => entity
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade));
 
-        modelBuilder.Entity<Project>()
-            .HasMany(project => project.AssignedUsers)
-            .WithMany(user => user.AssignedProjects)
-            .UsingEntity(entity => entity.ToTable("AssignedUserProjects"));
+        // Users - Owned - Projects
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.OwnedProjects)
+            .WithMany(project => project.ProjectOwners)
+            .UsingEntity<Dictionary<string, object>>(
+                "OwnedUsersProjects",
+                entity => entity
+                    .HasOne<Project>()
+                    .WithMany()
+                    .HasForeignKey("ProjectId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                entity => entity
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade));
 
-        modelBuilder.Entity<Ticket>()
-            .HasMany(ticket => ticket.TicketOwners)
-            .WithMany(user => user.OwnedTickets)
-            .UsingEntity(entity => entity.ToTable("OwnedUserTickets"));
+        // Users - Assigned - Projects
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.AssignedProjects)
+            .WithMany(project => project.AssignedUsers)
+            .UsingEntity<Dictionary<string, object>>(
+                "AssignedUsersProjects",
+                entity => entity
+                    .HasOne<Project>()
+                    .WithMany()
+                    .HasForeignKey("ProjectId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                entity => entity
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade));
 
-        modelBuilder.Entity<Ticket>()
-            .HasMany(ticket => ticket.AssignedUsers)
-            .WithMany(user => user.AssignedTickets)
-            .UsingEntity(entity => entity.ToTable("AssignedUserTickets"));
+        // Users - Owned - Tickets
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.OwnedTickets)
+            .WithMany(ticket => ticket.TicketOwners)
+            .UsingEntity<Dictionary<string, object>>(
+                "OwnedUsersTickets",
+                entity => entity
+                    .HasOne<Ticket>()
+                    .WithMany()
+                    .HasForeignKey("TicketId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                entity => entity
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade));
+
+        // Users - Assigned - Tickets
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.AssignedTickets)
+            .WithMany(ticket => ticket.AssignedUsers)
+            .UsingEntity<Dictionary<string, object>>(
+                "AssignedUsersTickets",
+                entity => entity
+                    .HasOne<Ticket>()
+                    .WithMany()
+                    .HasForeignKey("TicketId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                entity => entity
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade));
     }
 }

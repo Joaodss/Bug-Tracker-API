@@ -7,10 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BugTrackerContext>(options => options
-    .UseMySql(
-        @"Server=localhost;Port=3306;Database=BugTracker;UserID=BugTracker-admin;Password=BugTracker-123;",
-        ServerVersion.Parse(" 8.0.26-mysql")
-    )
+    .UseNpgsql(@"Host=localhost;Database=BugTracker;Username=postgres;Password=123admin")
     .LogTo(Console.WriteLine, LogLevel.Information)
     .EnableSensitiveDataLogging()
     .EnableDetailedErrors()

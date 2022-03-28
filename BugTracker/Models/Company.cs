@@ -6,16 +6,15 @@ namespace BugTracker.Models;
 [Table("Companies")]
 public class Company
 {
-    [Key, Column("id")]
+    [Key] [Column("id")]
     public long Id { get; set; }
 
-    [Required, Column("created_at", TypeName = "datetime2")]
-    public DateTime CreatedAt { get; } = DateTime.Now;
+    [Required] [Column("created_at")]
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Required, Column("name")]
+    [Required] [Column("name")]
     public string Name { get; set; }
 
-    // -------------------- Model Relations --------------------
     // Many to Many
     public virtual ICollection<User> Admins { get; set; }
 
@@ -25,8 +24,4 @@ public class Company
     // One to Many
     [InverseProperty("Company")]
     public virtual ICollection<Project> Projects { get; set; }
-
-    // One to Many
-    [InverseProperty("Company")]
-    public virtual ICollection<Ticket> Tickets { get; set; }
 }

@@ -7,35 +7,35 @@ namespace BugTracker.Models;
 [Table("Tickets")]
 public class Ticket
 {
-    [Key, Column("id")]
+    [Key] [Column("id")]
     public long Id { get; set; }
 
-    [Required, Column("created_at", TypeName = "datetime2")]
-    public DateTime CreatedAt { get; } = DateTime.Now;
+    [Required] [Column("created_at")]
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Required, Column("title")]
+    [Required] [Column("title")]
     public string Title { get; set; }
 
-    [Required, Column("description")]
+    [Required] [Column("description")]
     public string Description { get; set; }
 
 
     // Enums are not stored in the database, so we need to store the string value of the enum
-    [Required, Column("status")]
+    [Required] [Column("status")]
     public string StatusString
     {
         get => Status.ToName();
         set => Status = FastEnum.Parse<TicketStatus>(value, true);
     }
 
-    [Required, Column("type")]
+    [Required] [Column("type")]
     public string TypeString
     {
         get => Type.ToName();
         set => Type = FastEnum.Parse<TicketType>(value, true);
     }
 
-    [Required, Column("priority")]
+    [Required] [Column("priority")]
     public string PriorityString
     {
         get => Priority.ToName();
@@ -51,16 +51,8 @@ public class Ticket
     [NotMapped]
     private TicketPriority Priority { get; set; }
 
-
-    // -------------------- Model Relations --------------------
     // Many to One
-    [Required, ForeignKey("company_id")]
-    public long CompanyId { get; set; }
-
-    public virtual Company Company { get; set; }
-
-    // Many to One
-    [Required, ForeignKey("project_id")]
+    [Required] [ForeignKey("project_id")]
     public long ProjectId { get; set; }
 
     public virtual Project Project { get; set; }
