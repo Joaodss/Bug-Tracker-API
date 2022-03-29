@@ -2,13 +2,27 @@ using BugTracker.Data;
 using BugTracker.Services;
 using BugTracker.Services.Impl;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddUserSecrets<Program>(true)
+    .AddEnvironmentVariables()
+    .Build();
+// -------------------- Configure Logger --------------------
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+
+// -------------------- Configure builder --------------------
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog();
+
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<BugTrackerContext>(options => options
     .UseNpgsql(@"Host=localhost;Database=BugTracker;Username=postgres;Password=123admin")
-    .LogTo(Console.WriteLine, LogLevel.Information)
     .EnableSensitiveDataLogging()
     .EnableDetailedErrors()
 );
@@ -21,17 +35,35 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Information("Starting web host");
+    
+    app.UseSerilogRequestLogging();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+
+    return 0;
 }
+catch (Exception e)
+{
+    Log.Fatal(e, "Host terminated unexpectedly");
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+    return 1;
+}
+finally
+{
+    Log.CloseAndFlush();
+}
