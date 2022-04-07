@@ -1,4 +1,6 @@
-﻿using BugTracker.Services;
+﻿using BugTracker.Repositories;
+using BugTracker.Repositories.Impl;
+using BugTracker.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugTracker.Controllers;
@@ -6,17 +8,17 @@ namespace BugTracker.Controllers;
 [ApiController] [Route("api/tickets-comments")]
 public class TicketCommentController : ControllerBase
 {
-    private readonly ITicketCommentService _ticketCommentService;
+    private readonly ITicketCommentsRepository _repository;
 
-    public TicketCommentController(ITicketCommentService ticketCommentService)
+    public TicketCommentController(ITicketCommentsRepository ticketCommentsRepository)
     {
-        _ticketCommentService = ticketCommentService;
+        _repository = ticketCommentsRepository;
     }
 
     [HttpGet]
     public IActionResult GetAll()
     {
-        var ticketComments = _ticketCommentService.GetAll();
+        var ticketComments = _repository.GetAll().ToList();
         return Ok(ticketComments);
     }
 }

@@ -1,4 +1,7 @@
 using BugTracker.Data;
+using BugTracker.Models;
+using BugTracker.Repositories;
+using BugTracker.Repositories.Impl;
 using BugTracker.Services;
 using BugTracker.Services.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +31,7 @@ builder.Services.AddDbContext<BugTrackerContext>(options => options
 );
 
 builder.Services.AddScoped<ITicketCommentService, TicketCommentService>();
+builder.Services.AddScoped<ITicketCommentsRepository, TicketCommentsRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -7,14 +7,15 @@ public class BugTrackerContext : DbContext
 {
     public BugTrackerContext(DbContextOptions<BugTrackerContext> options) : base(options)
     {
+        base.Database.EnsureCreated();
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<Company> Companies { get; set; }
-    public DbSet<Project> Projects { get; set; }
-    public DbSet<Ticket> Tickets { get; set; }
-    public DbSet<TicketComment> Comments { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Company> Companies { get; set; } = null!;
+    public DbSet<Project> Projects { get; set; } = null!;
+    public DbSet<Ticket> Tickets { get; set; } = null!;
+    public DbSet<TicketComment> Comments { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
