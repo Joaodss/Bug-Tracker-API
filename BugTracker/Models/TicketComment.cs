@@ -16,13 +16,13 @@ public class TicketComment
     public string content { get; set; }
 
     // Many to One
-    [Required] [ForeignKey("ticket_id")]
+    [Required] [ForeignKey("ticket_id")] [Column("ticket_id")]
     public long TicketId { get; set; }
 
     public virtual Ticket Ticket { get; set; }
 
     // Many to One
-    [Required] [ForeignKey("user_id")]
+    [Required] [ForeignKey("user_id")] [Column("user_id")]
     public Guid UserId { get; set; }
 
     public virtual User User { get; set; }

@@ -1,6 +1,6 @@
-namespace BugTracker.DTOs;
+namespace BugTracker.DTOs.User;
 
-public record UserDTO
+public record struct UserDto
 {
     public Guid Id { get; init; }
     public DateTime CreatedAt { get; init; }

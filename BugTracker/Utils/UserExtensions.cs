@@ -1,4 +1,5 @@
 using BugTracker.DTOs;
+using BugTracker.DTOs.User;
 using BugTracker.Models;
 
 namespace BugTracker.Utils;
@@ -6,9 +7,9 @@ namespace BugTracker.Utils;
 public static class UserExtensions
 {
     // User - UserDTO
-    public static UserDTO AsDto(this User user)
+    public static UserDto AsDto(this User user)
     {
-        return new UserDTO
+        return new UserDto
         {
             Id = user.Id,
             CreatedAt = user.CreatedAt,
@@ -19,8 +20,8 @@ public static class UserExtensions
         };
     }
 
-    // CreateUserDTO - User
-    public static User AsUser(this CreateUserDTO dto)
+    // CreateUserDto - User
+    public static User AsUser(this CreateUserDto dto)
     {
         return new User
         {

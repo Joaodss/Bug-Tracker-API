@@ -16,12 +16,12 @@ public class Company
     public string Name { get; set; }
 
     // Many to Many
-    public virtual ICollection<User> Admins { get; set; }
+    public virtual IEnumerable<User> Admins { get; set; }
 
     // Many to Many
-    public virtual ICollection<User> Users { get; set; }
+    public virtual IEnumerable<User> Users { get; set; }
 
     // One to Many
     [InverseProperty("Company")]
-    public virtual ICollection<Project> Projects { get; set; }
+    public virtual IEnumerable<Project> Projects { get; set; }
 }

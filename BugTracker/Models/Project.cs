@@ -19,18 +19,18 @@ public class Project
     public string? Description { get; set; }
 
     // Many to One
-    [Required] [ForeignKey("company_id")]
+    [Required] [ForeignKey("company_id")] [Column("company_id")]
     public long CompanyId { get; set; }
 
     public virtual Company Company { get; set; }
 
     // One to Many
     [InverseProperty("Project")]
-    public virtual ICollection<Ticket> Tickets { get; set; }
+    public virtual IEnumerable<Ticket> Tickets { get; set; }
 
     // Many to Many
-    public virtual ICollection<User> ProjectOwners { get; set; }
+    public virtual IEnumerable<User> ProjectOwners { get; set; }
 
     // Many to Many
-    public virtual ICollection<User> AssignedUsers { get; set; }
+    public virtual IEnumerable<User> AssignedUsers { get; set; }
 }

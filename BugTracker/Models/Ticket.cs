@@ -52,20 +52,20 @@ public class Ticket
     private TicketPriority Priority { get; set; }
 
     // Many to One
-    [Required] [ForeignKey("project_id")]
+    [Required] [ForeignKey("project_id")] [Column("project_id")]
     public long ProjectId { get; set; }
 
     public virtual Project Project { get; set; }
 
     // One to Many
     [InverseProperty("Ticket")]
-    public virtual ICollection<TicketComment> TicketComments { get; set; }
+    public virtual IEnumerable<TicketComment> TicketComments { get; set; }
 
     // Many to Many
-    public virtual ICollection<User> TicketOwners { get; set; }
+    public virtual IEnumerable<User> TicketOwners { get; set; }
 
     // Many to Many
-    public virtual ICollection<User> AssignedUsers { get; set; }
+    public virtual IEnumerable<User> AssignedUsers { get; set; }
 }
 
 public enum TicketPriority

@@ -14,5 +14,5 @@ public class Role
 
     // One to Many: Role - Users
     [InverseProperty("Role")]
-    public virtual ICollection<User> Users { get; set; }
+    public virtual IEnumerable<User> Users { get; set; }
 }

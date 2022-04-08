@@ -1,8 +1,12 @@
 using System.Linq.Expressions;
 
-namespace BugTracker.Repositories;
+namespace BugTracker.Data.Repositories;
 
-public interface IBaseRepository<TEntity> where TEntity : class
+public interface IBaseRepository
+{
+}
+
+public interface IBaseRepository<TEntity> : IBaseRepository where TEntity : class
 {
     TEntity? GetById(long id);
     TEntity? GetById(Guid guid);
@@ -19,5 +23,5 @@ public interface IBaseRepository<TEntity> where TEntity : class
     void Delete(TEntity entity);
     void DeleteRange(IEnumerable<TEntity> entities);
 
-    void Save();
+    void Attach(TEntity entity);
 }

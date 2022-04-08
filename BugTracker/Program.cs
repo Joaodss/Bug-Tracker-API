@@ -1,9 +1,6 @@
 using BugTracker.Data;
-using BugTracker.Models;
-using BugTracker.Repositories;
-using BugTracker.Repositories.Impl;
-using BugTracker.Services;
-using BugTracker.Services.Impl;
+using BugTracker.Data.Repositories;
+using BugTracker.Data.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -24,14 +21,20 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<BugTrackerContext>(options => options
+builder.Services.AddDbContext<DbContext, BugTrackerContext>(options => options
     .UseNpgsql(@"Host=localhost;Database=BugTracker;Username=postgres;Password=123admin")
     .EnableSensitiveDataLogging()
     .EnableDetailedErrors()
 );
 
-builder.Services.AddScoped<ITicketCommentService, TicketCommentService>();
-builder.Services.AddScoped<ITicketCommentsRepository, TicketCommentsRepository>();
+builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+builder.Services.AddTransient<IRolesRepository, RolesRepository>();
+builder.Services.AddTransient<ICompaniesRepository, CompaniesRepository>();
+builder.Services.AddTransient<IProjectsRepository, ProjectsRepository>();
+builder.Services.AddTransient<ITicketsRepository, TicketsRepository>();
+builder.Services.AddTransient<ITicketCommentsRepository, TicketCommentsRepository>();
+
+builder.Services.AddTransient<IUnityOfWork, UnityOfWork>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -42,7 +45,7 @@ var app = builder.Build();
 try
 {
     Log.Information("Starting web host");
-    
+
     app.UseSerilogRequestLogging();
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())

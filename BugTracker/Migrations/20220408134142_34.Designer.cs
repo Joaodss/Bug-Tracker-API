@@ -3,6 +3,7 @@ using System;
 using BugTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BugTracker.Migrations
 {
     [DbContext(typeof(BugTrackerContext))]
-    partial class BugTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20220408134142_34")]
+    partial class _34
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,8 +103,7 @@ namespace BugTracker.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CompanyId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("company_id");
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -167,8 +168,7 @@ namespace BugTracker.Migrations
                         .HasColumnName("priority");
 
                     b.Property<long>("ProjectId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("project_id");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("StatusString")
                         .IsRequired()
@@ -202,16 +202,14 @@ namespace BugTracker.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<long>("TicketId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("ticket_id");
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("content")
                         .IsRequired()
@@ -258,8 +256,7 @@ namespace BugTracker.Migrations
                         .HasColumnName("photo_url");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("integer")
-                        .HasColumnName("role_id");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

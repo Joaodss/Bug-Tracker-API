@@ -1,25 +1,23 @@
 using System.Data.Common;
 using System.Linq.Expressions;
-using BugTracker.Data;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace BugTracker.Repositories.Impl;
+namespace BugTracker.Data.Repositories.Impl;
 
-public class BaseRepository<TEntity> : IBaseRepository<TEntity>, IDisposable where TEntity : class
+public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
-    private readonly ILogger<BaseRepository<TEntity>> _logger;
-    private readonly BugTrackerContext _context;
+    protected readonly DbConnection _connection;
     private readonly DbSet<TEntity> _dbSet;
-    private readonly DbConnection _connection;
     private readonly string _entityName;
+    protected readonly ILogger<BaseRepository<TEntity>> _logger;
 
-    public BaseRepository(ILogger<BaseRepository<TEntity>> logger, BugTrackerContext context)
+
+    protected BaseRepository(ILogger<BaseRepository<TEntity>> logger, DbContext context)
     {
         _logger = logger;
-        _context = context;
-        _dbSet = _context.Set<TEntity>();
-        _connection = _context.Database.GetDbConnection();
+        _dbSet = context.Set<TEntity>();
+        _connection = context.Database.GetDbConnection();
         _entityName = typeof(TEntity).Name + "s";
     }
 
@@ -27,7 +25,10 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>, IDisposable whe
     {
         _logger.LogInformation("Getting {0} by id: {1}", _entityName, id);
 
-        var query = $"SELECT * FROM \"BugTracker\".\"{_entityName}\" WHERE id = @Id";
+        var query = $@"
+            SELECT * 
+            FROM ""BugTracker"".""{_entityName}"" 
+            WHERE id = @Id";
 
         return _connection.Query<TEntity>(query, new {Entity = _entityName, Id = id}).FirstOrDefault();
     }
@@ -36,18 +37,21 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>, IDisposable whe
     {
         _logger.LogInformation("Getting {0} by guid: {1}", _entityName, guid);
 
-        var query = $"SELECT * FROM \"BugTracker\".\"{_entityName}\" WHERE id = @Guid";
+        var query = $@"
+            SELECT * 
+            FROM ""BugTracker"".""{_entityName}"" 
+            WHERE id = @Guid";
 
-        return _connection.Query<TEntity>(query, new {Entity = _entityName, Guid = guid}).FirstOrDefault();
+        return _connection.QueryFirstOrDefault<TEntity>(query, new {Entity = _entityName, Guid = guid});
     }
 
     public virtual IEnumerable<TEntity> GetAll()
     {
         _logger.LogInformation("Getting all {0}", _entityName);
 
-        var query = $"SELECT * FROM \"BugTracker\".\"{_entityName}\"";
-
-        _logger.LogInformation("Query: {0}", query);
+        var query = $@"
+            SELECT * 
+            FROM ""BugTracker"".""{_entityName}""";
 
         return _connection.Query<TEntity>(query);
     }
@@ -124,28 +128,8 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>, IDisposable whe
         _dbSet.RemoveRange(entities);
     }
 
-    public virtual void Save()
+    public virtual void Attach(TEntity entity)
     {
-        _logger.LogInformation("Saving changes");
-
-        _context.SaveChanges();
-    }
-
-
-    public void Dispose()
-    {
-        Dispose(true);
-
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposing)
-        {
-            return;
-        }
-
-        _context.Dispose();
+        _dbSet.Attach(entity);
     }
 }

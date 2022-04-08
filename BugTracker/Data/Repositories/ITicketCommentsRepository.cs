@@ -1,6 +1,6 @@
 using BugTracker.Models;
 
-namespace BugTracker.Repositories;
+namespace BugTracker.Data.Repositories;
 
 public interface ITicketCommentsRepository : IBaseRepository<TicketComment>
 {

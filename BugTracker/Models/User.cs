@@ -24,30 +24,30 @@ public class User
     public string? PhotoUrl { get; set; }
 
     // Many to One: Roles - User
-    [Required] [ForeignKey("role_id")]
+    [Required] [ForeignKey("role_id")] [Column("role_id")]
     public int RoleId { get; set; }
 
     public Role Role { get; set; }
 
     // Many to Many: Users - Owned - Companies
-    public virtual ICollection<Company> OwnedCompanies { get; set; }
+    public virtual IEnumerable<Company> OwnedCompanies { get; set; }
 
     // Many to Many: Users - Assigned - Companies
-    public virtual ICollection<Company> AssignedCompanies { get; set; }
+    public virtual IEnumerable<Company> AssignedCompanies { get; set; }
 
     // Many to Many: Users - Owned - Projects
-    public virtual ICollection<Project> OwnedProjects { get; set; }
+    public virtual IEnumerable<Project> OwnedProjects { get; set; }
 
     // Many to Many: Users - Assigned - Projects
-    public virtual ICollection<Project> AssignedProjects { get; set; }
+    public virtual IEnumerable<Project> AssignedProjects { get; set; }
 
     // Many to Many: Users - Owned - Tickets
-    public virtual ICollection<Ticket> OwnedTickets { get; set; }
+    public virtual IEnumerable<Ticket> OwnedTickets { get; set; }
 
     // Many to Many: Users - Assigned - Tickets
-    public virtual ICollection<Ticket> AssignedTickets { get; set; }
+    public virtual IEnumerable<Ticket> AssignedTickets { get; set; }
 
     // One to Many: User - Comments
-    [InverseProperty("User")]
-    public virtual ICollection<TicketComment> TicketComments { get; set; }
+    [InverseProperty("User")] 
+    public virtual IEnumerable<TicketComment> TicketComments { get; set; }
 }
